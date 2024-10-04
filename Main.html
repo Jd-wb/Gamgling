@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google classroom</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #1a1a1a, #333);
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+            animation: fadeIn 1s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        #game {
+            background: rgba(30, 30, 30, 0.9);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        #game:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 40px rgba(255, 165, 0, 0.8);
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #ffcc00;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+        }
+        p {
+            font-size: 1.2em;
+        }
+        input[type="number"] {
+            width: 100%;
+            height: 50px;
+            font-size: 20px;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            background-color: #444;
+            color: #ffffff;
+            margin-bottom: 20px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        input[type="number"]:focus {
+            background-color: #555;
+            outline: none;
+            transform: scale(1.02);
+        }
+        button {
+            height: 50px;
+            font-size: 20px;
+            border: none;
+            border-radius: 5px;
+            background: linear-gradient(90deg, #ff5722, #ffcc00);
+            color: #ffffff;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+        button:hover {
+            background: linear-gradient(90deg, #e64a19, #ffb300);
+            transform: scale(1.05);
+        }
+        button:active {
+            background: linear-gradient(90deg, #d84315, #ff8f00);
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 1.5em;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        #roulette {
+            margin-top: 20px;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 10px solid #fff;
+            position: relative;
+            overflow: hidden;
+        }
+        .sector {
+            position: absolute;
+            width: 50%;
+            height: 100%;
+            transform-origin: 100%;
+        }
+        .red {
+            background-color: red;
+        }
+        .black {
+            background-color: black;
+        }
+    </style>
+</head>
+<body>
+
+<div id="game">
+    <h1>Roulette</h1>
+    <p>Your Balance: <span id="balance">1000</span> Money</p>
+    <input type="number" id="betAmount" placeholder="Enter your bet amount">
+    <select id="betColor">
+        <option value="">Select Color</option>
+        <option value="red">Red</option>
+        <option value="black">Black</option>
+    </select>
+    <button onclick="placeBet()">Place Bet</button>
+    <p id="result"></p>
+    <div id="roulette">
+        <div class="sector red" style="transform: rotate(0deg);"></div>
+        <div class="sector black" style="transform: rotate(30deg);"></div>
+        <div class="sector red" style="transform: rotate(60deg);"></div>
+        <div class="sector black" style="transform: rotate(90deg);"></div>
+        <div class="sector red" style="transform: rotate(120deg);"></div>
+        <div class="sector black" style="transform: rotate(150deg);"></div>
+        <div class="sector red" style="transform: rotate(180deg);"></div>
+        <div class="sector black" style="transform: rotate(210deg);"></div>
+        <div class="sector red" style="transform: rotate(240deg);"></div>
+        <div class="sector black" style="transform: rotate(270deg);"></div>
+        <div class="sector red" style="transform: rotate(300deg);"></div>
+        <div class="sector black" style="transform: rotate(330deg);"></div>
+    </div>
+</div>
+
+<script>
+    let balance = 1000;
+
+    function placeBet() {
+        const betAmount = parseInt(document.getElementById('betAmount').value);
+        const betColor = document.getElementById('betColor').value;
+        const resultField = document.getElementById('result');
+
+        if (isNaN(betAmount) || betAmount <= 0 || betAmount > balance) {
+            resultField.innerText = 'Invalid bet amount!';
+            resultField.style.color = 'red';
+            return;
+        }
+        if (betColor === "") {
+            resultField.innerText = 'Please select a color!';
+            resultField.style.color = 'red';
+            return;
+        }
+
+        const winningColor = Math.random() < 0.5 ? 'red' : 'black'; // Randomly select winning color
+        const win = (betColor === winningColor);
+
+        if (win) {
+            balance += betAmount; // Win: add bet amount to balance
+            resultField.innerText = `🎉 You won! Winning color: ${winningColor}. New balance: ${balance} Money 🎉`;
+            resultField.style.color = 'green';
+        } else {
+            balance -= betAmount; // Lose: subtract bet amount from balance
+            resultField.innerText = `💔 You lost! Winning color: ${winningColor}. New balance: ${balance} Money 💔`;
+            resultField.style.color = 'red';
+        }
+
+        document.getElementById('balance').innerText = balance;
+        document.getElementById('betAmount').value = ''; // Clear input
+        document.getElementById('betColor').value = ''; // Clear selection
+    }
+</script>
+
+</body>
+</html>
